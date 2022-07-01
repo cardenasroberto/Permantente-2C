@@ -1,0 +1,86 @@
+#importamos tkinder y sus modulos
+import tkinter as tk
+from tkinter import ttk
+from tkinter import messagebox
+import time
+#ventana principal
+class Aplicacion:
+    #inicializador
+    def __init__(self, master):
+        self.master = master
+        self.master.title('Inicio')
+        self.master.geometry('350x350')
+        self.inicializar_gui()
+    
+    def inicializar_gui(self):
+        #usamos Label para mostrar el texto de bienvenida
+        lbl_bienvenido = tk.Label(self.master, text='¡Bienvenido!', font=('Helvetica', 27))
+        lbl_bienvenido.place(x=80, y=90)
+        btn_login = tk.Button(self.master, text='Login')
+        btn_login['command'] = self.login
+        btn_login.place(x=155, y=180)
+    #creamos la nueva ventana
+    def login(self):
+        login_ventana = LoginVentana(self.master)
+        self.master.wait_window(login_ventana.ventana)
+
+class LoginVentana:
+    #iniciamos la ventana 
+    def __init__(self, master):
+        self.master = master
+        #para crear ventanas secundarias
+        self.ventana = tk.Toplevel()
+        self.ventana.grab_set()
+        self.ventana.title('Login')
+        self.ventana.geometry('300x200')
+
+        self.inicializar_gui()
+    
+    def inicializar_gui(self):
+        #creamos el Label para el usuario
+        lbl_usuario = tk.Label(self.ventana, text='Usuario:')
+        lbl_usuario.place(x=20, y=20)
+        #campo de texto
+        self.txt_usuario = tk.Entry(self.ventana)
+        self.txt_usuario.place(x=80, y=20)
+        self.txt_usuario.focus()
+        #creamos Label para contraseña
+        lbl_clave = tk.Label(self.ventana, text='Clave:')
+        lbl_clave.place(x=20, y=50)
+        #campo de texto
+        self.txt_clave = tk.Entry(self.ventana)
+        self.txt_clave.place(x=80, y=50)
+
+        btn_login = tk.Button(self.ventana, text='Login')
+        btn_login.place(x=80, y=80)
+        btn_login['command'] = self.login
+    #al presionar escape la ventana de login se cerrará
+        self.ventana.bind('<Escape>', lambda e: self.ventana.destroy())
+
+    def login(self):
+        #leemos el texto que sea ingresado
+        usuario = self.txt_usuario.get()
+        clave = self.txt_clave.get()
+        usuario = self.txt_usuario.get().strip()
+        clave = self.txt_clave.get().strip()
+    #al no ingresar valores en login saldrá una ventana de aviso pidiendoq ue ingrese valores
+        if len(usuario) == 0:
+            messagebox.showwarning('Mensaje', 'El campo Usuario es obligatorio.')
+            return
+
+        if len(clave) == 0:
+            messagebox.showwarning('Mensaje', 'El campo Clave es obligatorio.')
+            return
+
+        # TODO: Validar datos sobre el login...
+        if usuario == 'ucsp' and clave == '123':
+            messagebox.showinfo('Mensaje', 'Ha iniciado sesión de forma satisfactoria.')
+        else:
+            messagebox.showwarning('Mensaje', 'Las credenciales ingresadas son inválidas.')
+#definimos el punto de entrada a la aplicación
+def main():
+    root = tk.Tk()
+    ventana = Aplicacion(root)
+    root.mainloop()
+if __name__ == "__main__":
+    main()
